@@ -4,16 +4,23 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-   public void StartGame()
+    void Update()
+    {
+        if (Input.GetButtonDown("Cancel"))
+        {
+            Debug.Log("QUIT");
+            Application.Quit();
+        }
+    }
+
+    public void StartGame()
    {
         Debug.Log("IN-GAME");
-        SceneManager.LoadScene("Gort Scene");
+        SceneManager.LoadScene("Jol Scene");
    }
     public void QuitGame()
     {
         Debug.Log("QUIT");
         Application.Quit();
-
-        Input.GetButtonDown("Escape");
     }
 }
