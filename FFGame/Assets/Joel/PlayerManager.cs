@@ -8,7 +8,8 @@ public class PlayerManager : MonoBehaviour
     private Rigidbody2D rb;
 
     public LayerMask wallLayer;
-    public Transform wallCheck;
+    public Transform LWallCheck;
+    public Transform RWallCheck;
 
     public float wallCheckRadius = 0.1f;
 
@@ -21,13 +22,15 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        isWalled(wallLayer);
         MovementLogic();
         flyLogic();
     }
 
     private bool isWalled(LayerMask wallLayer)
     {
-        return Physics2D.OverlapCircle(wallCheck.position, wallCheckRadius, wallLayer);
+        return Physics2D.OverlapCircle(LWallCheck.position, wallCheckRadius, wallLayer)
+        || Physics2D.OverlapCircle(RWallCheck.position, wallCheckRadius, wallLayer);
     }
 
     public void MovementLogic()
@@ -38,11 +41,11 @@ public class PlayerManager : MonoBehaviour
 
         if (isWalled(wallLayer))
         {
-            rb.gravityScale = 0f;  // Turn off gravity
+            rb.gravityScale = 0f;
         }
         else
         {
-            rb.gravityScale = 1f;  // Normal gravity
+            rb.gravityScale = 1f;
         }
     }
 
