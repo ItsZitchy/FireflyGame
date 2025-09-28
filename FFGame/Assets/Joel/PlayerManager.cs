@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -22,13 +22,17 @@ public class PlayerManager : MonoBehaviour
     public float maxStamina = 100f;
     public float staminaDrainRate = 40f;
     public float staminaRegenRate = 50f;
-
     private float currentStamina;
+
+    SpriteRenderer spriteRenderer;
+    Animator animator;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
 
         currentStamina = maxStamina;
     }
@@ -37,19 +41,24 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
         isGrounded(groundLayer);
-        isWalled(wallLayer);
+        isWalledLeft(wallLayer);
+        isWalledRight(wallLayer);
         MovementLogic();
         flyLogic();
+        spriteFlip();
     }
 
     private bool isGrounded(LayerMask groundLayer)
     {
         return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
-    private bool isWalled(LayerMask wallLayer)
+    private bool isWalledLeft(LayerMask wallLayer)
     {
-        return Physics2D.OverlapCircle(LWallCheck.position, wallCheckRadius, wallLayer)
-        || Physics2D.OverlapCircle(RWallCheck.position, wallCheckRadius, wallLayer);
+        return Physics2D.OverlapCircle(LWallCheck.position, wallCheckRadius, wallLayer);
+    }
+    private bool isWalledRight(LayerMask wallLayer)
+    {
+        return Physics2D.OverlapCircle(RWallCheck.position, wallCheckRadius, wallLayer);
     }
 
     public void MovementLogic()
@@ -57,7 +66,7 @@ public class PlayerManager : MonoBehaviour
         float moveInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
 
-        if (isWalled(wallLayer)) 
+        if (isWalledLeft(wallLayer) || isWalledRight(wallLayer))
         {
             rb.gravityScale = 0f;
             jumpForce = 0f;
@@ -72,7 +81,7 @@ public class PlayerManager : MonoBehaviour
             rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
         }
 
-        if (isGrounded(groundLayer) || isWalled(wallLayer))
+        if (isGrounded(groundLayer) || isWalledLeft(wallLayer) || isWalledRight(wallLayer))
         {
             currentStamina += staminaRegenRate * Time.deltaTime;
             currentStamina = Mathf.Min(currentStamina, maxStamina);
@@ -94,6 +103,37 @@ public class PlayerManager : MonoBehaviour
         if (rb.linearVelocity.y > maxVerticalSpeed)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, maxVerticalSpeed);
+        }
+    }
+
+    public void spriteFlip()
+    {
+        if (!isWalledLeft(wallLayer) && !isWalledRight(wallLayer))
+        {
+            spriteRenderer.flipY = false;
+            if (Input.GetAxisRaw("Horizontal") > 0)
+            {
+                animator.SetBool("OnWall", false);
+                spriteRenderer.flipX = false;
+            }
+            else if (Input.GetAxisRaw("Horizontal") < 0)
+            {
+                animator.SetBool("OnWall", false);
+                spriteRenderer.flipX = true;
+            }
+        }
+        else
+        {
+            animator.SetBool("OnWall", true);
+
+            if (Input.GetAxisRaw("Vertical") > 0)
+            {
+                spriteRenderer.flipY = false;
+            }
+            else if (Input.GetAxisRaw("Vertical") < 0)
+            {
+                spriteRenderer.flipY = true;
+            }
         }
     }
 }
