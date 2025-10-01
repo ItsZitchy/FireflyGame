@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
+    //movement
     public float moveSpeed = 4f;
     public float jumpForce = 3f;
     public float maxVerticalSpeed = 8f;
 
     private Rigidbody2D rb;
 
-
+    
+    //platform checks
     public Transform groundCheck;
     public float groundCheckRadius = 0.1f;
     public LayerMask groundLayer;
@@ -22,13 +25,16 @@ public class PlayerManager : MonoBehaviour
     private Collider2D carriedBox;
 
 
+    //stamina
     public float maxStamina = 100f;
     public float staminaDrainRate = 40f;
     public float staminaRegenRate = 50f;
     private float currentStamina;
 
+    //respawn
     private Vector3 spawnPoint;
 
+    //other
     SpriteRenderer spriteRenderer;
     Animator animator;
 
