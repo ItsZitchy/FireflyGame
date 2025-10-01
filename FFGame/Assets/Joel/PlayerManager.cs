@@ -3,8 +3,8 @@
 public class PlayerManager : MonoBehaviour
 {
     public float moveSpeed = 4f;
-    public float jumpForce = 10f;
-    public float maxVerticalSpeed = 10f;
+    public float jumpForce = 3f;
+    public float maxVerticalSpeed = 8f;
 
     private Rigidbody2D rb;
 
@@ -18,11 +18,16 @@ public class PlayerManager : MonoBehaviour
     public Transform LWallCheck;
     public Transform RWallCheck;
 
+    public LayerMask boxLayer;
+    private Collider2D carriedBox;
+
 
     public float maxStamina = 100f;
     public float staminaDrainRate = 40f;
     public float staminaRegenRate = 50f;
     private float currentStamina;
+
+    private Vector3 spawnPoint;
 
     SpriteRenderer spriteRenderer;
     Animator animator;
@@ -35,6 +40,8 @@ public class PlayerManager : MonoBehaviour
         animator = GetComponent<Animator>();
 
         currentStamina = maxStamina;
+
+        spawnPoint = transform.position;
     }
 
     // Update is called once per frame
@@ -44,8 +51,10 @@ public class PlayerManager : MonoBehaviour
         isWalledLeft(wallLayer);
         isWalledRight(wallLayer);
         MovementLogic();
-        flyLogic();
-        spriteFlip();
+        Stamina();
+        FlyLogic();
+        SpriteFlip();
+        LiftBox();
     }
 
     private bool isGrounded(LayerMask groundLayer)
@@ -59,6 +68,21 @@ public class PlayerManager : MonoBehaviour
     private bool isWalledRight(LayerMask wallLayer)
     {
         return Physics2D.OverlapCircle(RWallCheck.position, wallCheckRadius, wallLayer);
+    }
+    private bool IsBoxGrounded(Collider2D box)
+    {
+        if (box == null) return false;
+
+        // Check just below the box
+        float extraHeight = 0.05f;
+        RaycastHit2D hit = Physics2D.Raycast(box.bounds.center, Vector2.down, box.bounds.extents.y + extraHeight, groundLayer);
+
+        return hit.collider != null;
+    }
+
+    private Collider2D GetBoxUnderPlayer(LayerMask boxLayer)
+    {
+        return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, boxLayer);
     }
 
     public void MovementLogic()
@@ -76,23 +100,28 @@ public class PlayerManager : MonoBehaviour
         else
         {
             rb.gravityScale = 1f;
-            jumpForce = 10f;
+            jumpForce = 3f;
 
             rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
         }
+    }
 
-        if (isGrounded(groundLayer) || isWalledLeft(wallLayer) || isWalledRight(wallLayer))
+    public void Stamina()
+    {
+        Collider2D box = GetBoxUnderPlayer(boxLayer);
+
+        if (isGrounded(groundLayer) || isWalledLeft(wallLayer) || isWalledRight(wallLayer) || (box != null && IsBoxGrounded(box)))
         {
             currentStamina += staminaRegenRate * Time.deltaTime;
             currentStamina = Mathf.Min(currentStamina, maxStamina);
         }
         else
         {
-            currentStamina -= (staminaDrainRate /2) * Time.deltaTime;
+            currentStamina -= (staminaDrainRate / 2) * Time.deltaTime;
         }
     }
 
-    public void flyLogic()
+    public void FlyLogic()
     {
         if (Input.GetButton("Jump") && currentStamina > 0f)
         {
@@ -106,7 +135,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void spriteFlip()
+    public void SpriteFlip()
     {
         if (!isWalledLeft(wallLayer) && !isWalledRight(wallLayer))
         {
@@ -134,6 +163,41 @@ public class PlayerManager : MonoBehaviour
             {
                 spriteRenderer.flipY = true;
             }
+        }
+    }
+
+    public void Respawn()
+    {
+        transform.position = spawnPoint;
+        Debug.Log("Player respawned!");
+    }
+
+    public void LiftBox()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            // Try to grab a box if standing on one
+            Collider2D box = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, boxLayer);
+            if (box != null)
+            {
+                carriedBox = box;
+            }
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift) && carriedBox != null)
+        {
+            carriedBox.transform.position = transform.position + new Vector3(0, -1f, 0);
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift) && carriedBox != null)
+        {
+            Rigidbody2D rb = carriedBox.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero;   // stop momentum
+                rb.angularVelocity = 0f;      // stop spinning just in case
+            }
+            carriedBox = null;
         }
     }
 }
