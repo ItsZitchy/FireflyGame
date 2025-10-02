@@ -5,7 +5,7 @@ public class PlayerManager : MonoBehaviour
 {
     //movement
     public float moveSpeed = 4f;
-    public float jumpForce = 3f;
+    public float jumpForce = 5f;
     public float maxVerticalSpeed = 8f;
 
     private Rigidbody2D rb;
@@ -106,7 +106,7 @@ public class PlayerManager : MonoBehaviour
         else
         {
             rb.gravityScale = 1f;
-            jumpForce = 3f;
+            jumpForce = 5f;
 
             rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
         }
