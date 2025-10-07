@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
+    //movement
     public float moveSpeed = 4f;
-    public float jumpForce = 10f;
-    public float maxVerticalSpeed = 10f;
+    public float jumpForce = 5f;
+    public float maxVerticalSpeed = 8f;
 
     private Rigidbody2D rb;
 
-
+    
+    //platform checks
     public Transform groundCheck;
     public float groundCheckRadius = 0.1f;
     public LayerMask groundLayer;
@@ -18,23 +21,39 @@ public class PlayerManager : MonoBehaviour
     public Transform LWallCheck;
     public Transform RWallCheck;
 
+    public LayerMask boxLayer;
+    private Collider2D carriedBox;
 
+
+    //stamina
     public float maxStamina = 100f;
     public float staminaDrainRate = 40f;
     public float staminaRegenRate = 50f;
     private float currentStamina;
 
+    //respawn
+    private Vector3 spawnPoint;
+
+    //liftbox
+
+    //other
     SpriteRenderer spriteRenderer;
     Animator animator;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //other
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
 
+        //stamina
         currentStamina = maxStamina;
+
+        //respawn
+        spawnPoint = transform.position;
+
     }
 
     // Update is called once per frame
@@ -44,8 +63,10 @@ public class PlayerManager : MonoBehaviour
         isWalledLeft(wallLayer);
         isWalledRight(wallLayer);
         MovementLogic();
-        flyLogic();
-        spriteFlip();
+        Stamina();
+        FlyLogic();
+        SpriteFlip();
+        LiftBox();
     }
 
     private bool isGrounded(LayerMask groundLayer)
@@ -59,6 +80,10 @@ public class PlayerManager : MonoBehaviour
     private bool isWalledRight(LayerMask wallLayer)
     {
         return Physics2D.OverlapCircle(RWallCheck.position, wallCheckRadius, wallLayer);
+    }
+    private bool isOnBox(LayerMask boxLayer)
+    {
+        return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius,  boxLayer);
     }
 
     public void MovementLogic()
@@ -76,11 +101,14 @@ public class PlayerManager : MonoBehaviour
         else
         {
             rb.gravityScale = 1f;
-            jumpForce = 10f;
+            jumpForce = 5f;
 
             rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
         }
+    }
 
+    public void Stamina()
+    { 
         if (isGrounded(groundLayer) || isWalledLeft(wallLayer) || isWalledRight(wallLayer))
         {
             currentStamina += staminaRegenRate * Time.deltaTime;
@@ -88,11 +116,11 @@ public class PlayerManager : MonoBehaviour
         }
         else
         {
-            currentStamina -= (staminaDrainRate /2) * Time.deltaTime;
+            currentStamina -= (staminaDrainRate / 2) * Time.deltaTime;
         }
     }
 
-    public void flyLogic()
+    public void FlyLogic()
     {
         if (Input.GetButton("Jump") && currentStamina > 0f)
         {
@@ -106,7 +134,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void spriteFlip()
+    public void SpriteFlip()
     {
         if (!isWalledLeft(wallLayer) && !isWalledRight(wallLayer))
         {
@@ -134,6 +162,43 @@ public class PlayerManager : MonoBehaviour
             {
                 spriteRenderer.flipY = true;
             }
+        }
+    }
+
+    public void Respawn()
+    {
+        transform.position = spawnPoint;
+        Debug.Log("Player respawned!");
+    }
+
+    public void LiftBox()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            // Try to grab a box if standing on one
+            Collider2D box = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, boxLayer);
+            if (box != null)
+            {
+                carriedBox = box;
+            }
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift) && carriedBox != null)
+        {
+            Rigidbody2D rb = carriedBox.GetComponent<Rigidbody2D>();
+            carriedBox.transform.position = transform.position + new Vector3(0, -1f, 0);
+            rb.angularVelocity = 0f;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift) && carriedBox != null)
+        {
+            if (rb != null)
+            {
+                Rigidbody2D rb = carriedBox.GetComponent<Rigidbody2D>();
+                rb.linearVelocity = Vector2.zero;   // stop momentum
+                rb.angularVelocity = 0f;      // stop spinning just in case
+            }
+            carriedBox = null;
         }
     }
 }
