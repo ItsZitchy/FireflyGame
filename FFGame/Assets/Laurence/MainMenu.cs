@@ -4,23 +4,22 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    void Update()
-    {
-        if (Input.GetButtonDown("Cancel"))
-        {
-            Debug.Log("QUIT");
-            Application.Quit();
-        }
-    }
+    [SerializeField] GameObject _mainMenuObject;
+    [SerializeField] GameObject _quitObject;
+    [SerializeField] GameObject _optionsMenuObject; 
 
-    public void StartGame()
-   {
-        Debug.Log("IN-GAME");
+    public void InGame()
+    {
+        Debug.Log("In-game");
         SceneManager.LoadScene("Jol Scene");
-   }
+    }
     public void QuitGame()
     {
-        Debug.Log("QUIT");
-        Application.Quit();
+        Debug.Log("Quit"); 
+    }
+    public void OptionsMenu()
+    {
+        _mainMenuObject.SetActive(false);
+        _optionsMenuObject.SetActive(true); 
     }
 }
