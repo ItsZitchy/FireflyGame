@@ -34,6 +34,8 @@ public class PlayerManager : MonoBehaviour
     //respawn
     private Vector3 spawnPoint;
 
+    //liftbox
+
     //other
     SpriteRenderer spriteRenderer;
     Animator animator;
@@ -41,13 +43,17 @@ public class PlayerManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //other
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
 
+        //stamina
         currentStamina = maxStamina;
 
+        //respawn
         spawnPoint = transform.position;
+
     }
 
     // Update is called once per frame
@@ -75,20 +81,9 @@ public class PlayerManager : MonoBehaviour
     {
         return Physics2D.OverlapCircle(RWallCheck.position, wallCheckRadius, wallLayer);
     }
-    private bool IsBoxGrounded(Collider2D box)
+    private bool isOnBox(LayerMask boxLayer)
     {
-        if (box == null) return false;
-
-        // Check just below the box
-        float extraHeight = 0.05f;
-        RaycastHit2D hit = Physics2D.Raycast(box.bounds.center, Vector2.down, box.bounds.extents.y + extraHeight, groundLayer);
-
-        return hit.collider != null;
-    }
-
-    private Collider2D GetBoxUnderPlayer(LayerMask boxLayer)
-    {
-        return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, boxLayer);
+        return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius,  boxLayer);
     }
 
     public void MovementLogic()
@@ -113,10 +108,8 @@ public class PlayerManager : MonoBehaviour
     }
 
     public void Stamina()
-    {
-        Collider2D box = GetBoxUnderPlayer(boxLayer);
-
-        if (isGrounded(groundLayer) || isWalledLeft(wallLayer) || isWalledRight(wallLayer) || (box != null && IsBoxGrounded(box)))
+    { 
+        if (isGrounded(groundLayer) || isWalledLeft(wallLayer) || isWalledRight(wallLayer))
         {
             currentStamina += staminaRegenRate * Time.deltaTime;
             currentStamina = Mathf.Min(currentStamina, maxStamina);
@@ -192,14 +185,16 @@ public class PlayerManager : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift) && carriedBox != null)
         {
+            Rigidbody2D rb = carriedBox.GetComponent<Rigidbody2D>();
             carriedBox.transform.position = transform.position + new Vector3(0, -1f, 0);
+            rb.angularVelocity = 0f;
         }
 
         if (Input.GetKeyUp(KeyCode.LeftShift) && carriedBox != null)
         {
-            Rigidbody2D rb = carriedBox.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
+                Rigidbody2D rb = carriedBox.GetComponent<Rigidbody2D>();
                 rb.linearVelocity = Vector2.zero;   // stop momentum
                 rb.angularVelocity = 0f;      // stop spinning just in case
             }
