@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -6,13 +7,24 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField] GameObject _mainMenuObject;
     [SerializeField] GameObject _quitObject;
-    [SerializeField] GameObject _optionsMenuObject; 
+    [SerializeField] GameObject _quitConfirmObject;
+    public Animator Anim;
+    public string sceneSwitch;
+
+    public void Start()
+    {
+        Anim = GetComponent<Animator>();
+    }
 
     public void InGame()
     {
         Debug.Log("In-game");
-        SceneManager.LoadScene("Jol Scene");
+        //trigger animation
+
+        //SceneManager.LoadScene("Jol Movement Scene");
+        Anim.SetTrigger("SceneSwitch");
     }
+
     public void QuitGame()
     {
         Debug.Log("Quit"); 
@@ -20,6 +32,11 @@ public class MainMenu : MonoBehaviour
     public void OptionsMenu()
     {
         _mainMenuObject.SetActive(false);
-        _optionsMenuObject.SetActive(true); 
+        _quitConfirmObject.SetActive(true); 
+    }
+
+    public void ChangeScene()
+    {
+        SceneManager.LoadScene(sceneSwitch);
     }
 }
