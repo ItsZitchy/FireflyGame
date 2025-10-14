@@ -109,7 +109,7 @@ public class PlayerManager : MonoBehaviour
 
     public void Stamina()
     { 
-        if (isGrounded(groundLayer) || isWalledLeft(wallLayer) || isWalledRight(wallLayer) || (isOnBox(boxLayer)))
+        if (isGrounded(groundLayer) || isWalledLeft(wallLayer) || isWalledRight(wallLayer))
         {
             currentStamina += staminaRegenRate * Time.deltaTime;
             currentStamina = Mathf.Min(currentStamina, maxStamina);
