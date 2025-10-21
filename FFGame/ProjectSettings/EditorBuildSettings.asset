@@ -6,17 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
     path: Assets/Laurence/LA Scene.unity
     guid: 9e3d3d6a8ece1824d8f6c3f430752fbc
+  - enabled: 1
+    path: Assets/Joel/PressurePlate/PressurePlate Logic.unity
+    guid: 552934b0837ef084690d6f95e224847e
   - enabled: 1
     path: Assets/Joel/Player/Jol Movement Scene.unity
     guid: 77574d8ecc9feeb43b3227a710bb800c
   - enabled: 1
     path: Assets/Gaio/Tut1.unity
     guid: 5cad493ce3e0dd84e993348e2ed1ec62
+  - enabled: 1
+    path: Assets/Scenes/SampleScene.unity
+    guid: 8c9cfa26abfee488c85f1582747f6a02
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

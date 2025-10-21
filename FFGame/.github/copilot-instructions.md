@@ -2,7 +2,7 @@
 - Project name: FFGame
 - Unity version: Unity 6000.2.1f1
 - Active game object:
-  - Name: Image
+  - Name: Canvas
   - Tag: Untagged
-  - Layer: Default
+  - Layer: UI
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

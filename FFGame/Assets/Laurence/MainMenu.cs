@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] GameObject _mainMenuObject;
-    [SerializeField] GameObject _quitObject;
     [SerializeField] GameObject _quitConfirmObject;
     public Animator Anim;
     public string sceneSwitch;
@@ -22,17 +21,21 @@ public class MainMenu : MonoBehaviour
         //trigger animation
 
         //SceneManager.LoadScene("Jol Movement Scene");
+        
+
         Anim.SetTrigger("SceneSwitch");
+    }
+
+    public void OutGame()
+    {
+        Anim.SetTrigger("QuitSwitch");
+
     }
 
     public void QuitGame()
     {
-        Debug.Log("Quit"); 
-    }
-    public void OptionsMenu()
-    {
         _mainMenuObject.SetActive(false);
-        _quitConfirmObject.SetActive(true); 
+        _quitConfirmObject.SetActive(true);
     }
 
     public void ChangeScene()
