@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 34167238}
   - component: {fileID: 34167237}
   - component: {fileID: 34167236}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: Box (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -296,7 +296,7 @@ GameObject:
   - component: {fileID: 75665628}
   - component: {fileID: 75665627}
   - component: {fileID: 75665626}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: Box (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -461,7 +461,7 @@ GameObject:
   - component: {fileID: 89496763}
   - component: {fileID: 89496762}
   - component: {fileID: 89496761}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: Box (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -661,7 +661,7 @@ GameObject:
   - component: {fileID: 369481753}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -788,16 +788,16 @@ MonoBehaviour:
   groundCheckRadius: 0.1
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   wallLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   wallCheckRadius: 0.1
   LWallCheck: {fileID: 714421711}
   RWallCheck: {fileID: 826978654}
   boxLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   maxStamina: 100
   staminaDrainRate: 40
   staminaRegenRate: 50
@@ -881,7 +881,7 @@ GameObject:
   - component: {fileID: 572276860}
   - component: {fileID: 572276862}
   - component: {fileID: 572276863}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1043,7 +1043,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 714421711}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: LWallCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1111,7 +1111,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 826978654}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: RWallCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1690,10 +1690,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1893478604}
-  - component: {fileID: 1893478605}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: Boxes
-  m_TagString: Untagged
+  m_TagString: Box
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1717,18 +1716,6 @@ Transform:
   - {fileID: 34167235}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1893478605
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1893478603}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1984f0ba892fa4b4ea77a814ef95ee4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!1 &1909808552
 GameObject:
   m_ObjectHideFlags: 0
