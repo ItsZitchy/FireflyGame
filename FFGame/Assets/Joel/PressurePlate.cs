@@ -7,10 +7,10 @@ public class PressurePlate : MonoBehaviour
     public float speed = 5f;
 
     [Header("Connected Doors")]
-    public BoxCollider2D[] doorColliders;
-    public SpriteRenderer[] doorSprites; // Add this for color changes
-    public Color openColor = Color.green;
-    public Color closedColor = Color.red;
+    public BoxCollider2D[] doorColliders;    // Colliders to enable/disable
+    public SpriteRenderer[] doorSprites;     // The visuals to change
+    public Sprite openSprite;                // Sprite when door is open
+    public Sprite closedSprite;              // Sprite when door is closed
 
     private Vector3 defaultPosition;
     private bool pressed = false;
@@ -19,10 +19,10 @@ public class PressurePlate : MonoBehaviour
     {
         defaultPosition = plate.position;
 
-        // Set all doors to closed color initially
+        // Initialize doors with closed sprite
         foreach (var sprite in doorSprites)
             if (sprite != null)
-                sprite.color = closedColor;
+                sprite.sprite = closedSprite;
     }
 
     void Update()
@@ -43,7 +43,7 @@ public class PressurePlate : MonoBehaviour
 
             foreach (var sprite in doorSprites)
                 if (sprite != null)
-                    sprite.color = openColor; // Change color
+                    sprite.sprite = openSprite; // Change visual to open
         }
     }
 
@@ -55,11 +55,11 @@ public class PressurePlate : MonoBehaviour
 
             foreach (var door in doorColliders)
                 if (door != null)
-                    door.enabled = true; // Enable collider (close)
+                    door.enabled = true; // Enable collider (closed)
 
             foreach (var sprite in doorSprites)
                 if (sprite != null)
-                    sprite.color = closedColor; // Change back
+                    sprite.sprite = closedSprite; // Change visual to closed
         }
     }
 }
