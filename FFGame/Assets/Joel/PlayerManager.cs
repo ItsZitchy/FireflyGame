@@ -67,6 +67,7 @@ public class PlayerManager : MonoBehaviour
         FlyLogic();
         SpriteFlip();
         LiftBox();
+        CallRespawn();
     }
 
     private bool isGrounded(LayerMask groundLayer)
@@ -167,6 +168,7 @@ public class PlayerManager : MonoBehaviour
 
     public void Respawn()
     {
+        rb.linearVelocity = Vector2.zero;
         transform.position = spawnPoint;
         Debug.Log("Player respawned!");
     }
@@ -199,6 +201,14 @@ public class PlayerManager : MonoBehaviour
                 rb.angularVelocity = 0f;      // stop spinning just in case
             }
             carriedBox = null;
+        }
+    }
+
+    public void CallRespawn()
+    {
+        if (Input.GetKey(KeyCode.R))
+        {
+            Respawn();
         }
     }
 }
