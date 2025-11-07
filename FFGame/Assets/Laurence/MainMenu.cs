@@ -38,6 +38,16 @@ public class MainMenu : MonoBehaviour
         _quitConfirmObject.SetActive(true);
     }
 
+    public void ReturnToMainMenu()
+    {
+        _quitConfirmObject.SetActive(false);
+        _mainMenuObject.SetActive(true);
+    }
+
+    public void ConfirmQuit()
+    {
+        Application.Quit();
+    }
     public void ChangeScene()
     {
         SceneManager.LoadScene(sceneSwitch);
