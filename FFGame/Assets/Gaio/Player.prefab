@@ -330,7 +330,7 @@ MonoBehaviour:
   RWallCheck: {fileID: 7498061789679556541}
   boxLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   maxStamina: 100
   staminaDrainRate: 40
   staminaRegenRate: 50
